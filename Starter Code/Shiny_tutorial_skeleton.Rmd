@@ -1,0 +1,29 @@
+---
+title: "Shiny_tutorial_Skeleton.Rmd"
+author: "Michael McCormack"
+date: "March 27, 2018"
+output: pdf_document
+---
+
+## To Begin: Familiarize your Self with the Starter Code
+#### Check out these resources
+#### https://shiny.rstudio.com/articles/tabsets.html
+#### https://shiny.rstudio.com/articles/plot-interaction-advanced.html
+#### https://shiny.rstudio.com/articles/sliders.html
+
+
+This can either be one file called app.R or 2 files called 1 being ui.R and the other being server.R.  
+
+## Assignment: Create a Shiny app that shows the average cancelations percentage per day in a given month compared to the average cancellations percentage for a month
+
+We want to compare the percentage of flights delayed on a certain day to the total percentage of flights delayed for this month (January 2017).
+
+You can use the data provided, or use 2017FL_performance.csv which is already broken down for a certain month (January, 2017)
+
+#### Advanced 
+Do this in ggplot
+
+
+
+
+
