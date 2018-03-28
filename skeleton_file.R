@@ -8,6 +8,9 @@ arr_delay <- flights %>% arrange(FL_DATE) %>% group_by(FL_DATE) %>% summarise(me
 names(arr_delay) <- c('FL_DATE', 'AVE_DELAY')
 data(AirPassengers)
 
+
+
+
 ui <- fluidPage(
   fluidRow(
     column(6,
