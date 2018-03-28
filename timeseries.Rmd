@@ -1,0 +1,120 @@
+---
+title: "Time Series in R"
+output: html_notebook
+---
+
+```{r include=FALSE}
+library(tidyverse)
+flights <- read.csv('data/flights.csv.gz')
+```
+
+```{r}
+arr_delay <- flights %>% arrange(FL_DATE) %>% group_by(FL_DATE) %>% summarise(mean(ARR_DELAY, na.rm = TRUE))
+names(arr_delay) <- c('FL_DATE', 'AVE_DELAY')
+
+dep_delay <- flights %>% arrange(FL_DATE) %>% group_by(FL_DATE) %>% summarise(mean(DEP_DELAY, na.rm = TRUE))
+names(dep_delay) <- c('FL_DATE', 'AVE_DELAY')
+
+plot(as.ts(arr_delay$AVE_DELAY))
+plot(as.ts(arr_delay$AVE_DELAY))
+#autoplot(as.ts(arr_delay$AVE_DELAY))# + geom_line()
+```
+
+```{r}
+unique(flights$DIVERTED)
+sum(na.omit(flights$ARR_DEL15) == 1)
+nrow(flights)
+
+###
+day_of_week = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+i = 1
+flights_by_day <- flights %>% arrange(DAY_OF_WEEK) %>% group_by(DAY_OF_WEEK) %>% summarise(per_arr=sum(ARR_DEL15, na.rm=TRUE)/n(), per_dep=sum(DEP_DEL15, na.rm=TRUE)/n(), div=sum(DIVERTED)/n(), normal=sum(ARR_DEL15 == 0 & DEP_DEL15 == 0 & DIVERTED == 0, na.rm=TRUE)/n())
+
+flights_by_day$DAY_OF_WEEK <- day_of_week[flights_by_day$DAY_OF_WEEK]
+
+dayflights <- melt(flights_by_day)
+
+g <- ggplot(dayflights, aes(x=variable, y=value, frame=DAY_OF_WEEK)) + geom_bar(stat = "identity", position = "identity")
+
+gganimate(g)
+
+#########
+
+day <- flights[flights$DAY_OF_WEEK == i,]
+
+arr_delayed <- sum(na.omit(day$ARR_DEL15) == 1)
+dep_delayed <- sum(na.omit(day$DEP_DEL15) == 1)
+diverted <- sum(day$DIVERTED == 1)
+normal <- nrow(day[day$ARR_DEL15 == 0 & day$DEP_DEL15 == 0 & day$DIVERTED == 0,])
+day_flights <- data.frame(arrival_delayed=arr_delayed/total, departure_delayed=dep_delayed/total, diverted=diverted/total, normal=normal/total)
+library(reshape2)
+day_flights <- melt(day_flights)
+names(day_flights) <- c("category","percentage")
+day_flights
+
+ggplot(flights_by_day, aes(x=factor(category, DAY_OF_WEEK), y=percentage)) + geom_bar(stat = "identity") + ggtitle(day_of_week[i])
+
+
+flights.sunday <- 
+nrow(flights.sunday)
+```
+
+
+```{r}
+data(AirPassengers)
+timeserie_air = AirPassengers
+plot(as.ts(timeserie_air))
+```
+
+```{r}
+#install.packages("forecast")
+library(forecast)
+trend_air = ma(timeserie_air, order = 12, centre = T)
+plot(as.ts(timeserie_air))
+lines(trend_air)
+plot(as.ts(trend_air))
+```
+
+```{r}
+detrend_air = timeserie_air / trend_air
+plot(as.ts(detrend_air))
+```
+
+```{r}
+m_air = t(matrix(data = detrend_air, nrow = 12))
+seasonal_air = colMeans(m_air, na.rm = T)
+plot(as.ts(rep(seasonal_air,12)))
+```
+
+```{r}
+random_air = timeserie_air / (trend_air * seasonal_air)
+plot(as.ts(random_air))
+```
+
+```{r}
+recomposed_air = trend_air*seasonal_air*random_air
+plot(as.ts(recomposed_air))
+```
+
+```{r}
+ts_air = ts(timeserie_air, frequency = 12)
+decompose_air = decompose(ts_air, "multiplicative")
+ 
+plot(as.ts(decompose_air$seasonal))
+plot(as.ts(decompose_air$trend))
+plot(as.ts(decompose_air$random))
+plot(decompose_air)
+```
+
+```{r}
+# simple moving average for monthly data
+moving_ave <- function(x,n=5){stats::filter(x,rep(1/n,n), sides=2)}
+
+
+trend <- moving_ave(as.ts(arr_delay$AVE_DELAY),30)
+plot(as.ts(arr_delay$AVE_DELAY))
+plot(trend)
+
+```
+
+

@@ -1,0 +1,40 @@
+---
+title: "Shiny_tutorial_Skeleton.Rmd"
+author: "Michael McCormack"
+date: "March 27, 2018"
+output: pdf_document
+---
+```{r setup, include=FALSE}
+suppressMessages(require(tidyverse))
+install.packages("shiny")
+library(shiny)
+```
+## Step 1: Create an initial outline of your Shiny app
+This can either be one file called app.R or 2 files called 1 being ui.R and the other being server.R.  
+
+## Step 2: Incorporate our data into the app 
+Here we will use flight data for a single month.
+
+We want to compare the percentage of flights delayed on a certain to the total percentage of flights delayed for this month (January 2017).
+
+Use the flights data from our previous project to display in Shiny form.  This is generally done in the server.R file.
+
+## Step 3: Have the app Visualize this data using Barcharts:
+Advanced - do this in ggplot
+
+## Step 4: Make sure the app is interpretable
+Label axis, Title, quick description of what you're visualizing
+
+## Step 5:  Add a new tab:
+
+## Step 6: Locate all the cities on a geograpical 
+
+## Use the starter code Provided to create a new tab in the app.
+
+## Create a visualization in the app that shows the average cancelations percentage per day in a given month compared to the average cancellations percentage for a month
+You can use the data provided, or use 2017FL_performance.csv which is already broken down for a certain month 
+#### Advanced do this in ggplot
+
+## Add a new tab that locates each of the possible cities on a Geographical Map
+Make it so you can select a city from a drop down menu and then locate that city on a map
+

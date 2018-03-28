@@ -1,0 +1,147 @@
+---
+title: "Shiny Tutorial"
+author: "Michael McCormack"
+date: "March 27, 2018"
+output: pdf_document 
+---
+
+```{r setup, include=FALSE}
+suppressMessages(require(tidyverse))
+install.packages("shiny")
+library(shiny)
+```
+
+## Step 1: Create an initial outline of your Shiny app
+This can either be one file called app.R or 2 files called 1 being ui.R and the other being server.R.  
+
+```{r}
+
+library(shiny)
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+   
+   # Application title
+   titlePanel("Old Faithful Geyser Data"),
+   
+   # Sidebar with a slider input for number of bins 
+   sidebarLayout(
+      sidebarPanel(
+         sliderInput("bins",
+                     "Number of bins:",
+                     min = 1,
+                     max = 50,
+                     value = 30)
+      ),
+      
+      # Show a plot of the generated distribution
+      mainPanel(
+         plotOutput("distPlot")
+      )
+   )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+   
+   output$distPlot <- renderPlot({
+      # generate bins based on input$bins from ui.R
+      x    <- faithful[, 2] 
+      bins <- seq(min(x), max(x), length.out = input$bins + 1)
+      
+      # draw the histogram with the specified number of bins
+      hist(x, breaks = bins, col = 'darkgray', border = 'white')
+   })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+
+
+```
+
+## Step 2: Incorporate our data into the app
+Here we will use flight data for a single month.
+
+We want to compare the percentage of flights delayed on a certain to the total percentage of flights delayed for this month (January 2017).
+
+
+Use the flights data from our previous project to display in Shiny form.  This is generally done in the server.R file.
+
+```{r}
+##Example of Server.R file
+library(shiny)
+
+# EDA before visualization
+data <- read.csv("2017FL_performance.csv")
+
+data %>% drop_na()
+
+data %>% 
+  select(DAY_OF_MONTH,ARR_DELAY,DEP_DELAY,CANCELLED) %>% 
+  group_by(DAY_OF_MONTH) %>%
+  summarise(avg_dep_delay = mean(DEP_DELAY, na.rm = TRUE),
+            avg_arr_delay = mean(ARR_DELAY, na.rm = TRUE),
+            avg_cancel = mean(CANCELLED))
+            
+      
+
+colnames(data)[1] <- "days"
+
+
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+   
+   # Application title
+   titlePanel("Flight Data"),
+   
+   # Sidebar with a slider input for number of bins 
+   sidebarLayout(
+      sidebarPanel(
+         sliderInput("bins",
+                     "Number of bins:",
+                     min = 1,
+                     max = 50,
+                     value = 30)
+      ),
+      
+      # Show a plot of the generated distribution
+      mainPanel(
+        tabsetPanel(type = "tabs",
+        tabPanel("Gender", plotOutput("distPlot")),
+        tabPanel("Job",plotOutput("job"))))
+      )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+   
+   output$distPlot <- renderPlot({
+      # generate bins based on input$bins from ui.R
+      x    <- faithful[, 2] 
+      bins <- seq(min(x), max(x), length.out = input$bins + 1)
+      
+      # draw the histogram with the specified number of bins
+      hist(x, breaks = bins, col = 'darkgray', border = 'white')
+   })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+
+
+```
+
+## Step 3: Have the app Visualize this data using Barcharts:
+Advanced - do this in ggplot
+
+## Step 4: Make sure the app is interpretable
+Label axis, Title, quick description of what you're visualizing
+
+## Step 5:  Add a new tab:
+
+
+## Step 6: Locate all the cities on a geograpical map
